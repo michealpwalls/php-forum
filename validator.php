@@ -73,6 +73,21 @@ class Validator {
 	}// end isString method
 	
 	/**
+	 * This method will test the user input to validate it as a Date String.
+	 * Date Strings are in the Format: YYYY-MM-DD
+	 * 
+	 * @return boolean True if the userInput is a valid Date String, False if otherwise.
+	 */
+	public function isDateString() {
+		$string_validationPattern = "/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/";
+		if( preg_match($string_validationPattern, $this->getUserInput()) ) {
+			return (bool)true;
+		} else {
+			return (bool)false;
+		}// end if
+	}// end isDateString method
+	
+	/**
 	 * This method will test the user input to validate it as a Small String
 	 * Small Strings are strings with 20 characters or less.
 	 * 
@@ -201,14 +216,14 @@ class Validator {
 	
 	/**
 	 * This method will test the user input to validate it as a Password.
-	 * Valid Passwords are "anything-goes", but must be in the character range: 5 - 250
+	 * Valid Passwords are "anything-goes", but must be in the character range: 3 - 250
 	 * 
 	 * Technically, "anything-goes" is any character from the Greek and Latin Unicode sets.
 	 * 
 	 * @return boolean True if the userInput is a valid Password, False if otherwise.
 	 */
 	public function isPassword() {
-		$string_validationPattern = "/^[\P{Greek}\P{Latin}]{5,250}$/i";
+		$string_validationPattern = "/^[\P{Greek}\P{Latin}]{3,250}$/i";
 		if( preg_match($string_validationPattern, $this->getUserInput()) ) {
 			return (bool)true;
 		} else {
@@ -275,6 +290,20 @@ class Validator {
 			return (bool)false;
 		}// end if
 	}// end isPostalCode method
+	
+	/**
+	 * This method will test the user input to validate it as a Name.
+	 * 
+	 * @return boolean True if the userInput is a valid Name, False if otherwise.
+	 */
+	public function isName() {
+		$string_validationPattern = "/^[\P{Greek}\P{Latin}]{2,75}$/i";
+		if( preg_match($string_validationPattern, $this->getUserInput()) ) {
+			return (bool)true;
+		} else {
+			return (bool)false;
+		}// end if
+	}// end isName method
 	
 }// end Validator Class
 ?>
