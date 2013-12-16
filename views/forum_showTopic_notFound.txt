@@ -1,0 +1,6 @@
+					<h2>Topic Not Found</h2>
+					<div class="container">
+						<div class="forum_showTopic">
+							<span class="forum_plainText">The requested Forum Topic does not exist.</span>
+						</div>
+					</div>

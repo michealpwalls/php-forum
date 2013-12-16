@@ -25,8 +25,6 @@
  * 
  * 
  */
- 
-//"NewUserTest",0,"test","test@testdomain.co.uk","M","2013-11-10","test","test","A5M-7M2"
 
 if( isset($_POST['register-is-registering']) && $_POST['register-is-registering'] == "true" ) {
 	if( !isset($_POST['register-username']) ) {
@@ -128,8 +126,21 @@ if( isset($_POST['register-is-registering']) && $_POST['register-is-registering'
 					</div>
 				</div>
 <?php
-	} else { 	// All checks pass! :)
-		if( $object_user->Register($_POST['register-username'], 0, $_POST['register-password-a'], $_POST['register-email'], $_POST['register-sex'], $_POST['register-bdate'], $_POST['register-fname'], $_POST['register-lname'], $_POST['register-pcode']) ) {
+	} else { 	// All checks passed
+		if( $_POST['register-password-a'] != $_POST['register-password-b'] ) {
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error!
+					</div>
+					<div class="content">
+						The first and second Passwords did not match.
+					</div>
+				</div>
+<?php
+		} else {
+			$int_registrationResult = $object_user->Register($_POST['register-username'], 0, $_POST['register-password-a'], $_POST['register-email'], $_POST['register-sex'], $_POST['register-bdate'], $_POST['register-fname'], $_POST['register-lname'], $_POST['register-pcode']);
+			if( $int_registrationResult === 0 ) {
 ?>
 				<div class="container">
 					<div class="title">
@@ -141,17 +152,180 @@ if( isset($_POST['register-is-registering']) && $_POST['register-is-registering'
 					</div>
 				</div>
 <?php
-		} else {
+			} else {
+
+				switch( $int_registrationResult ) {
+					case -1:
 ?>
 				<div class="container">
 					<div class="title">
-						Registration Error (11)
+						Registration Error (Username)
 					</div>
 					<div class="content">
-						The new user failed to be Registered. Call Oprah Winfrey! CALL TOM CRUISE! :(
+						The entered Usernamed was rejected.
 					</div>
 				</div>
 <?php
+						break;
+					case -2:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (Group)
+					</div>
+					<div class="content">
+						The entered Group ID was rejected.
+					</div>
+				</div>
+<?php
+						break;
+					case -3:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (Password)
+					</div>
+					<div class="content">
+						The entered Password was rejected.
+					</div>
+				</div>
+<?php
+						break;
+					case -4:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (eMail)
+					</div>
+					<div class="content">
+						The entered eMail Address was rejected.
+					</div>
+				</div>
+<?php
+						break;
+					case -5:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (Sex)
+					</div>
+					<div class="content">
+						The entered Sex was rejected.
+					</div>
+				</div>
+<?php
+						break;
+					case -6:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (BirthDate)
+					</div>
+					<div class="content">
+						The entered Birth Date was rejected.
+					</div>
+				</div>
+<?php
+						break;
+					case -7:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (FName)
+					</div>
+					<div class="content">
+						The entered First Name was rejected.
+					</div>
+				</div>
+<?php
+						break;
+					case -8:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (LName)
+					</div>
+					<div class="content">
+						The entered Last Name was rejected.
+					</div>
+				</div>
+<?php
+						break;
+					case -9:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (PCode)
+					</div>
+					<div class="content">
+						The entered Postal Code was rejected.
+					</div>
+				</div>
+<?php
+						break;
+					case -10:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (User Exists)
+					</div>
+					<div class="content">
+						The specified User already exists in the Forum System.
+					</div>
+				</div>
+<?php
+						break;
+					case -11:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (Query Fault)
+					</div>
+					<div class="content">
+						The Database was connected, but the Query failed to run.
+					</div>
+				</div>
+<?php
+						break;
+					case -12:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (Connect Fault)
+					</div>
+					<div class="content">
+						The Database could not be connected!
+					</div>
+				</div>
+<?php
+						break;
+					case -13:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (DB ResultSet)
+					</div>
+					<div class="content">
+						The ResultSet was not returned from the Duplicate-User-Check!
+					</div>
+				</div>
+<?php
+						break;
+					default:
+?>
+				<div class="container">
+					<div class="title">
+						Registration Error (?)
+					</div>
+					<div class="content">
+						An unknown and unhandled exception was thrown! Call Oprah Winfrey! CALL TOM CRUISE! :(
+					</div>
+				</div>
+<?php
+						break;
+				}// end switch
+
+			}// end if
 		}// end if
 	}// end if
 } else {

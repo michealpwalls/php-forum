@@ -29,7 +29,9 @@
 
 if( isset($_POST['login-username']) && isset($_POST['login-password']) ) {
 	// Attempt to Login the user
-	if( $object_user->Login($_POST['login-username'],$_POST['login-password']) ) {
+	$int_loginResult = $object_user->Login($_POST['login-username'],$_POST['login-password']);
+
+	if( $int_loginResult === 0 ) {
 ?>
 				<div class="container">
 					<div class="title">
@@ -38,19 +40,84 @@ if( isset($_POST['login-username']) && isset($_POST['login-password']) ) {
 					<div class="content">
 						You have been successfully logged into the Forum System!<br>
 						Click <a href="index.php">here</a> to return to the Forum Demo
+					</div>
 				</div>
 <?php
 	} else {
+		switch( $int_loginResult ) {
+			case -1:
 ?>
 				<div class="container">
 					<div class="title">
-						Login Error (2)
+						Login Error (Username)
 					</div>
 					<div class="content">
-						The Username or Password you entered was invalid
+						The entered Usernamed was rejected.
 					</div>
 				</div>
 <?php
+				break;
+			case -2:
+?>
+				<div class="container">
+					<div class="title">
+						Login Error (Password)
+					</div>
+					<div class="content">
+						The entered Password was rejected.
+					</div>
+				</div>
+<?php
+				break;
+			case -3:
+?>
+				<div class="container">
+					<div class="title">
+						Login Error (DB Connection)
+					</div>
+					<div class="content">
+						An exception was thrown when trying to connect to our Database! :(
+					</div>
+				</div>
+<?php
+				break;
+			case -4:
+?>
+				<div class="container">
+					<div class="title">
+						Login Error (Missing User)
+					</div>
+					<div class="content">
+						The entered Usernamed and Password combination was not found.
+					</div>
+				</div>
+<?php
+				break;
+			case -5:
+?>
+				<div class="container">
+					<div class="title">
+						Login Error (DB Query)
+					</div>
+					<div class="content">
+						The Database was connected to, but threw an exception when we Queried it. Clearly a problem with society..
+					</div>
+				</div>
+<?php
+				break;
+			default:
+?>
+				<div class="container">
+					<div class="title">
+						Login Error (?)
+					</div>
+					<div class="content">
+						An unknown and unhandled exception occured. Sorry! I blame society...
+					</div>
+				</div>
+<?php
+				break;
+		}// end switch
 	} // end if
 } else {
 ?>

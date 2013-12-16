@@ -73,7 +73,7 @@ class Validator {
 	 * @return boolean True if the userInput is a String, false if it is not. Returns false if string is empty.
 	 */
 	public function isString() {
-		$string_validationPattern = "/^[a-z0-9,\._\-'\";:\/\\\[\]\{\}\^\$\(\)\?\*\+&%#@!`\~]+$/i";
+		$string_validationPattern = "/^[a-z0-9, \.<>_\-'\";:\/\\\[\]\{\}\^\$\(\)\?\*\+&%#@!`\~]+$/i";
 		if( preg_match($string_validationPattern, $this->getUserInput()) ) {
 			return (bool)true;
 		} else {

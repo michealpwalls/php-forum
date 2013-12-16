@@ -1,0 +1,16 @@
+						<div class="forum_topic_addComment">
+							<form action="index.php?doAction=addcomment" method="POST">
+								<fieldset>
+									<legend>Post a Comment</legend>
+									<label for="addcomment-title">Comment Title</label>
+									<input type="text" name="addcomment-title" required><br>
+									<label for="addcomment-body">Comment Body</label><br>
+									<textarea name="addcomment-body" rows="6" cols="35" required></textarea>
+								</fieldset>
+								<input type="hidden" name="addcomment-is-posting" value="true">
+								<input type="hidden" name="addcomment-tid" value="<?=htmlentities( $mixed_topicIDIn, ENT_QUOTES | ENT_HTML5, 'UTF-8' );?>">
+								<input type="hidden" name="addcomment-oname" value="<?=htmlentities( $mixed_userNameIn, ENT_QUOTES | ENT_HTML5, 'UTF-8' );?>">
+								<input type="submit" value="Comment">
+							</form>
+						</div>
+					</div>

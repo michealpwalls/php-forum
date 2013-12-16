@@ -1,0 +1,5 @@
+						</div>
+						<div class="forumIndexControls">
+							<span class="forumIndexControl"><a href="index.php?doAction=addtopic">Add new Topic</a></span>
+						</div>
+					</div>

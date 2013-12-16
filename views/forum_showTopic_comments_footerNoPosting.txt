@@ -1,0 +1,9 @@
+						<div class="forum_topic_addComment">
+							<form action="#" method="POST">
+								<fieldset>
+									<legend>Post a Comment</legend>
+									<span class="forum_errorText">You must be logged in to post comments</span>
+								</fieldset>
+							</form>
+						</div>
+					</div>

@@ -1,0 +1,3 @@
+					<h2>Forum Index</h2>
+					<div class="container">
+						<div class="forumIndex">

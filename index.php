@@ -48,7 +48,7 @@
 include_once( "lib/validator.php" );
 
 // Instantiate the User object
-include_once( "user.php" );
+include( "user.php" );
 $object_user = new User();
 
 // Draw the user navigation
@@ -56,7 +56,7 @@ if( $object_user->isLoggedIn() ) {
 ?>
 				<nav id="userNavigation">
 					<ul>
-						<li><a href="index.php?doAction=controlpanel"><?=$object_user->getUsername();?>'s Control Panel</a></li>
+						<li><a href="index.php?doAction=updateprofile&uid=<?=$object_user->getUID();?>">Edit your Profile</a></li>
 						<li><a href="index.php?doAction=logout">Logout</a></li>
 					</ul>
 				</nav>
@@ -82,10 +82,10 @@ if( $object_user->isLoggedIn() ) {
 			<section title="Forum">
 <?php
 if( isset($_GET['doAction']) ) {
-	if( file_exists("./" . $_GET['doAction'] . ".action.php") ) {
-		include_once( $_GET['doAction'] . ".action.php" );
+	if( file_exists("./actions/" . $_GET['doAction'] . ".action.php") ) {
+		include_once( "actions/" . $_GET['doAction'] . ".action.php" );
 	} else {
-		include_once( "notfound.action.php" );
+		include_once( "actions/notfound.action.php" );
 	}// end if
 } else {
 	// Instantiate the Forum object
