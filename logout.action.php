@@ -1,6 +1,6 @@
 <?php
 /*
- * dbconnect.php -		mpw-forum v0.1
+ * logout.action.php -	mpw-forum v0.1
  * 
  * 		Description:	Very simple web forum. A throwback to the
  * 						Bulletin Board Systems of the past.
@@ -25,22 +25,11 @@
  * 
  * 
  */
-	 
-	// Array of options to be passed through the PDO constructor.
-	$array_dbOptions = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'");
 
-	try {
-		// Connect to the Database
-		$object_dbConnection = new PDO( "mysql:localhost;dbname=db200250645", "micheal", "MiKey2116" );
+// Log the user out
+$object_user->Logout();
 
-		// Manually set the character encoding just in case.
-		$object_dbConnection->exec( "SET NAMES utf8" );
-		
-		// Manually set the DB just in case.
-		$object_dbConnection->exec( "USE db200250645" );
-		
-	// Catch exceptions thrown by PDO to prevent leaking information
-	} catch( PDOException $object_dbException ) {
-		$object_dbConnection = null;
-	}
+// Redirect to the mainpage
+include_once( "lib/directoryURL.php" );
+header( "Location:" . directoryURL() . "/index.php" );
 ?>

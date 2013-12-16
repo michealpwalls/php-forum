@@ -1,25 +1,29 @@
 <?php
 /*
- *      user.php
- *      
- *      Copyright 2013 Micheal Walls <michealpwalls@gmail.com>
- *      
- *      This program is free software; you can redistribute it and/or modify
- *      it under the terms of the GNU General Public License as published by
- *      the Free Software Foundation; either version 2 of the License, or
- *      (at your option) any later version.
- *      
- *      This program is distributed in the hope that it will be useful,
- *      but WITHOUT ANY WARRANTY; without even the implied warranty of
- *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *      GNU General Public License for more details.
- *      
- *      You should have received a copy of the GNU General Public License
- *      along with this program; if not, write to the Free Software
- *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- *      MA 02110-1301, USA.
- *      
- *      
+ * user.php -			mpw-forum v0.1
+ * 
+ * 		Description:	Very simple web forum. A throwback to the
+ * 						Bulletin Board Systems of the past.
+ * 						Organized into Topics and Topic Comments.
+ * 
+ * Copyright 2013 Micheal Walls <michealpwalls@gmail.com>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ * 
  */
 
 /**
@@ -27,6 +31,8 @@
  * 
  * Each forum user, even when not logged in, will be represented as
  * one of these User objects
+ * 
+ * @author Micheal Walls
  */
 class User extends Validator {
 	// Private Array to hold Property values
@@ -61,9 +67,24 @@ class User extends Validator {
 			// Load defaults
 			// TODO: Call the setters to load the default Profile
 			$this->setUsername( "Guest" );
+			$this->setGID( 0 );
 		}// end if
 
 	}// end Constructor
+
+	/**
+	 * Boolean pseudo-property.
+	 * 
+	 * @return Boolean True if user is logged in
+	 * @return Boolean False if user is not logged in
+	 */
+	public function isLoggedIn() {
+		if( $this->getUsername() === "Guest" ) {
+			return (bool)false;
+		} else {
+			return (bool)true;
+		}// end if
+	}// end isLoggedIn method
 
 	/**
 	 * Getter for the Username property. Returns the currently set Username
@@ -418,6 +439,7 @@ class User extends Validator {
 	 * @param $mixed_lastNameIn String The new User's Last Name
 	 * @param $mixed_postalCodeIn String The new User's Postal Code
 	 * @return Integer An errorcode. 1 on success, 0 on invalid username, -1 on invalid Group ID, -2 on invalid password, -3 on invalid eMail, -4 on invalid sex, -5 on invalid BirthDate, -6 on invalid firstName, -7 on invalid lastName, -8 on invalid postalCode, -9 when User already exists and -10 on Database exceptions
+	 * @return Integer Errorcode -11 on Database Connection issues.
 	 */
 	public function Register( $mixed_usernameIn, $mixed_groupIDIn, $mixed_passwordIn, $mixed_emailIn, $mixed_sexIn, $mixed_birthDateIn, $mixed_firstNameIn, $mixed_lastNameIn, $mixed_postalCodeIn ) {
 		// Validate the Username
@@ -475,10 +497,15 @@ class User extends Validator {
 		}// end if
 		
 		// Hash the Password
-		$string_password = $mixed_passwordIn;
+		$string_password = hash( "sha512", $mixed_passwordIn );
 		
 		// Connect to the Database
 		include( "lib/dbconnect.php" );
+		
+		// Make sure we actually connected
+		if( !isset($object_dbConnection) || is_null($object_dbConnection) ) {
+			return (int)-11;
+		}// end if
 		
 		// Get the current date and time
 		$array_dateTime = getdate();
@@ -554,7 +581,7 @@ class User extends Validator {
 				$array_cookieOptions["domain"],
 				$array_cookieOptions["secure"],
 				$array_cookieOptions["httponly"]
-			);
+			);// end call to setcookie
 		}
 
 		// Unregister the session

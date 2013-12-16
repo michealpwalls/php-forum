@@ -1,6 +1,6 @@
 <?php
 /*
- * dbconnect.php -		mpw-forum v0.1
+ * login.action.php -			mpw-forum v0.1
  * 
  * 		Description:	Very simple web forum. A throwback to the
  * 						Bulletin Board Systems of the past.
@@ -25,22 +25,44 @@
  * 
  * 
  */
-	 
-	// Array of options to be passed through the PDO constructor.
-	$array_dbOptions = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'");
 
-	try {
-		// Connect to the Database
-		$object_dbConnection = new PDO( "mysql:localhost;dbname=db200250645", "micheal", "MiKey2116" );
 
-		// Manually set the character encoding just in case.
-		$object_dbConnection->exec( "SET NAMES utf8" );
-		
-		// Manually set the DB just in case.
-		$object_dbConnection->exec( "USE db200250645" );
-		
-	// Catch exceptions thrown by PDO to prevent leaking information
-	} catch( PDOException $object_dbException ) {
-		$object_dbConnection = null;
-	}
+if( isset($_POST['login-username']) && isset($_POST['login-password']) ) {
+	// Attempt to Login the user
+	if( $object_user->Login($_POST['login-username'],$_POST['login-password']) ) {
+?>
+				<div class="container">
+					<div class="title">
+						Login Success!
+					</div>
+					<div class="content">
+						You have been successfully logged into the Forum System!<br>
+						Click <a href="index.php">here</a> to return to the Forum Demo
+				</div>
+<?php
+	} else {
+?>
+				<div class="container">
+					<div class="title">
+						Login Error (2)
+					</div>
+					<div class="content">
+						The Username or Password you entered was invalid
+					</div>
+				</div>
+<?php
+	} // end if
+} else {
+?>
+				<div class="container">
+					<div class="title">
+						Login Error (1)
+					</div>
+					<div class="content">
+						The Username or Password you entered was invalid
+					</div>
+				</div>
+
+<?php
+}// end if
 ?>

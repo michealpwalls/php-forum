@@ -1,6 +1,6 @@
 <?php
 /*
- * dbconnect.php -		mpw-forum v0.1
+ * directoryURL.php	-	mpw-forum v0.1
  * 
  * 		Description:	Very simple web forum. A throwback to the
  * 						Bulletin Board Systems of the past.
@@ -25,22 +25,29 @@
  * 
  * 
  */
-	 
-	// Array of options to be passed through the PDO constructor.
-	$array_dbOptions = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'");
+ 
+	/**
+	 * This method will return the URL of the current directory send_email.php is run from
+	 * 
+	 * @return a string representing the URL of the current working directory, sort of.
+	 */
+	function directoryURL() {
+		$directoryURL = 'http';
 
-	try {
-		// Connect to the Database
-		$object_dbConnection = new PDO( "mysql:localhost;dbname=db200250645", "micheal", "MiKey2116" );
+		//If the protocol is HTTPS, append an s to the http
+		if ($_SERVER["HTTPS"] == "on") {
+			$pageURL .= "s";
+		}
 
-		// Manually set the character encoding just in case.
-		$object_dbConnection->exec( "SET NAMES utf8" );
-		
-		// Manually set the DB just in case.
-		$object_dbConnection->exec( "USE db200250645" );
-		
-	// Catch exceptions thrown by PDO to prevent leaking information
-	} catch( PDOException $object_dbException ) {
-		$object_dbConnection = null;
+		$directoryURL .= "://";
+
+		//If the port connected to is not the standard port 80, append the required colon and port number to the domain name
+		if( $_SERVER["SERVER_PORT"] != "80" ) {
+			$directoryURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . dirname( $_SERVER['SCRIPT_NAME'] );
+		} else {
+			$directoryURL .= $_SERVER["SERVER_NAME"] . dirname( $_SERVER['SCRIPT_NAME'] );
+		}
+
+		return $directoryURL;
 	}
 ?>
