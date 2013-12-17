@@ -13,3 +13,8 @@ div.forum_topic_addComment {
 form input, form select, form textarea { display: inline; }
 
 form label { display: inline; }
+
+div.forumIndexControls {
+	display: block;
+	margin-top: 15px;
+}

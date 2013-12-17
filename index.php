@@ -94,7 +94,12 @@ if( isset($_GET['doAction']) ) {
 	// Instantiate the Forum object
 	include_once( "forum.php" );
 	$object_forum = new Forum();
-	$object_forum->showTopics();
+	$int_showTopicsResult = $object_forum->showTopics();
+
+	if( $int_showTopicsResult === -1 ) {
+
+	}// end if
+
 }// end if
 ?>
 			</section>

@@ -11,3 +11,8 @@ div.forum_topic_addComment {
 }
 
 form label { display: block; }
+
+div.forumIndexControls {
+	display: block;
+	margin-top: 10px;
+}

@@ -339,24 +339,24 @@ if( isset($_POST['register-is-registering']) && $_POST['register-is-registering'
 							<fieldset>
 								<legend>Account Details</legend>
 								<label for="register-username">Username</label>
-								<input type="text" name="register-username" required>
+								<input type="text" name="register-username" required><br>
 								<label for="register-password-a">Password</label>
-								<input type="password" name="register-password-a" required>
+								<input type="password" name="register-password-a" required><br>
 								<label for="register-password-b">Repeat Password</label>
-								<input type="password" name="register-password-b" required>
+								<input type="password" name="register-password-b" required><br>
 								<label for="register-email">eMail Address</label>
-								<input type="email" name="register-email" required>
+								<input type="email" name="register-email" size="20" required>
 							</fieldset>
 							<fieldset>
 								<legend>User Profile</legend>
 								<label for="register-fname">First Name</label>
-								<input type="text" name="register-fname" required>
+								<input type="text" name="register-fname" required><br>
 								<label for="register-lname">Last Name</label>
-								<input type="text" name="register-lname" required>
+								<input type="text" name="register-lname" required><br>
 								<label for="register-sex">Sex</label>
-								<input type="text" name="register-sex" required>
+								<input type="text" name="register-sex" size="1" required><br>
 								<label for="register-bdate">Birth Date (YYYY-MM-DD)</label>
-								<input type="text" name="register-bdate" required>
+								<input type="text" name="register-bdate" required><br>
 								<label for="register-pcode">Postal Code (A1B-2C3)</label>
 								<input type="text" name="register-pcode" required>
 							</fieldset>

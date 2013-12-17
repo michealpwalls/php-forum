@@ -93,6 +93,7 @@ class Forum extends Validator {
 		}// end if
 		
 		// Get the current date and time
+		date_default_timezone_set( "America/Montreal" );
 		$array_dateTime = getdate();
 		$string_currentDateTime = $array_dateTime["year"] . "-" . $array_dateTime["mon"] . "-" . $array_dateTime["mday"] . " " . $array_dateTime["hours"] . ":" . $array_dateTime["minutes"] . ":" . $array_dateTime["seconds"];
 		
@@ -439,6 +440,7 @@ class Forum extends Validator {
 		$object_dbPreparedStatement = $object_dbConnection->prepare( "INSERT INTO mpw_forum_comments(TID,ONAME,TITLE,BODY,CDATE) VALUES(:tid,:oname,:title,:body,:cdate);" );
 
 		// Get the current date and time
+		date_default_timezone_set( "America/Montreal" );
 		$array_dateTime = getdate();
 		$string_currentDateTime = $array_dateTime["year"] . "-" . $array_dateTime["mon"] . "-" . $array_dateTime["mday"] . " " . $array_dateTime["hours"] . ":" . $array_dateTime["minutes"] . ":" . $array_dateTime["seconds"];
 

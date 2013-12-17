@@ -132,6 +132,7 @@ class User extends Validator {
 	 */
 	public function getAge() {
 		// Get the current date
+		date_default_timezone_set( "America/Montreal" );
 		$array_currentDate = getdate();
 		
 		// Get the difference of the user's birth date to the current date
@@ -562,6 +563,7 @@ class User extends Validator {
 		}// end if
 		
 		// Get the current date and time
+		date_default_timezone_set( "America/Montreal" );
 		$array_dateTime = getdate();
 		$string_currentDateTime = $array_dateTime["year"] . "-" . $array_dateTime["mon"] . "-" . $array_dateTime["mday"] . " " . $array_dateTime["hours"] . ":" . $array_dateTime["minutes"] . ":" . $array_dateTime["seconds"];
 
