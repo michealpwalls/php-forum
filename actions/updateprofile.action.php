@@ -31,32 +31,10 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 ?>
 				<div class="container">
 					<div class="title">
-						Registration Error (1)
+						Profile Update Error (1)
 					</div>
 					<div class="content">
 						The Username was missing
-					</div>
-				</div>
-<?php
-	} else if ( !isset($_POST['updateprofile-password-a']) ) {
-?>
-				<div class="container">
-					<div class="title">
-						Registration Error (2)
-					</div>
-					<div class="content">
-						The first Password was missing
-					</div>
-				</div>
-<?php
-	} else if ( !isset($_POST['updateprofile-password-b']) ) {
-?>
-				<div class="container">
-					<div class="title">
-						Registration Error (3)
-					</div>
-					<div class="content">
-						The second Password was missing
 					</div>
 				</div>
 <?php
@@ -64,7 +42,7 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 ?>
 				<div class="container">
 					<div class="title">
-						Registration Error (4)
+						Profile Update Error (4)
 					</div>
 					<div class="content">
 						The eMail Address was missing
@@ -75,7 +53,7 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 ?>
 				<div class="container">
 					<div class="title">
-						Registration Error (5)
+						Profile Update Error (5)
 					</div>
 					<div class="content">
 						The First Name was missing
@@ -86,7 +64,7 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 ?>
 				<div class="container">
 					<div class="title">
-						Registration Error (6)
+						Profile Update Error (6)
 					</div>
 					<div class="content">
 						The Last Name was missing
@@ -97,7 +75,7 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 ?>
 				<div class="container">
 					<div class="title">
-						Registration Error (8)
+						Profile Update Error (8)
 					</div>
 					<div class="content">
 						The Sex was missing
@@ -108,7 +86,7 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 ?>
 				<div class="container">
 					<div class="title">
-						Registration Error (9)
+						Profile Update Error (9)
 					</div>
 					<div class="content">
 						The Birth Date was missing
@@ -119,7 +97,7 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 ?>
 				<div class="container">
 					<div class="title">
-						Registration Error (10)
+						Profile Update Error (10)
 					</div>
 					<div class="content">
 						The Postal Code was missing
@@ -127,20 +105,8 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 				</div>
 <?php
 	} else { 	// All checks passed
-		if( $_POST['updateprofile-password-a'] != $_POST['updateprofile-password-b'] ) {
-?>
-				<div class="container">
-					<div class="title">
-						Profile Update Error!
-					</div>
-					<div class="content">
-						The first and second Passwords did not match.
-					</div>
-				</div>
-<?php
-		} else {
-			$int_profileUpdateResult = $object_user->Register($_POST['register-username'], 0, $_POST['register-password-a'], $_POST['register-email'], $_POST['register-sex'], $_POST['register-bdate'], $_POST['register-fname'], $_POST['register-lname'], $_POST['register-pcode']);
-			if( $int_profileUpdateResultResult === 0 ) {
+		$int_profileUpdateResult = $object_user->UpdateProfile( $_POST['updateprofile-uid'], $_POST['updateprofile-username'], $_POST['updateprofile-gid'], $_POST['updateprofile-email'], $_POST['updateprofile-sex'], $_POST['updateprofile-bdate'], $_POST['updateprofile-fname'], $_POST['updateprofile-lname'], $_POST['updateprofile-pcode'] );
+		if( $int_profileUpdateResult === 0 ) {
 ?>
 				<div class="container">
 					<div class="title">
@@ -152,46 +118,46 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 					</div>
 				</div>
 <?php
-			} else {
+		} else {
 
-				switch( $int_profileUpdateResult ) {
-					case -1:
+			switch( $int_profileUpdateResult ) {
+				case -1:
+?>
+				<div class="container">
+					<div class="title">
+						Profile Update Error (User ID)
+					</div>
+					<div class="content">
+						The entered User ID was rejected.
+					</div>
+				</div>
+<?php
+					break;
+				case -2:
 ?>
 				<div class="container">
 					<div class="title">
 						Profile Update Error (Username)
 					</div>
 					<div class="content">
-						The entered Usernamed was rejected.
+						The entered Username was rejected.
 					</div>
 				</div>
 <?php
-						break;
-					case -2:
+					break;
+				case -3:
 ?>
 				<div class="container">
 					<div class="title">
-						Profile Update Error (Group)
+						Profile Update Error (Group ID)
 					</div>
 					<div class="content">
 						The entered Group ID was rejected.
 					</div>
 				</div>
 <?php
-						break;
-					case -3:
-?>
-				<div class="container">
-					<div class="title">
-						Profile Update Error (Password)
-					</div>
-					<div class="content">
-						The entered Password was rejected.
-					</div>
-				</div>
-<?php
-						break;
-					case -4:
+					break;
+				case -4:
 ?>
 				<div class="container">
 					<div class="title">
@@ -202,8 +168,8 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 					</div>
 				</div>
 <?php
-						break;
-					case -5:
+					break;
+				case -5:
 ?>
 				<div class="container">
 					<div class="title">
@@ -214,8 +180,8 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 					</div>
 				</div>
 <?php
-						break;
-					case -6:
+					break;
+				case -6:
 ?>
 				<div class="container">
 					<div class="title">
@@ -226,8 +192,8 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 					</div>
 				</div>
 <?php
-						break;
-					case -7:
+					break;
+				case -7:
 ?>
 				<div class="container">
 					<div class="title">
@@ -238,8 +204,8 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 					</div>
 				</div>
 <?php
-						break;
-					case -8:
+					break;
+				case -8:
 ?>
 				<div class="container">
 					<div class="title">
@@ -250,8 +216,8 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 					</div>
 				</div>
 <?php
-						break;
-					case -9:
+					break;
+				case -9:
 ?>
 				<div class="container">
 					<div class="title">
@@ -262,20 +228,20 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 					</div>
 				</div>
 <?php
-						break;
-					case -10:
+					break;
+				case -10:
 ?>
 				<div class="container">
 					<div class="title">
-						Profile Update Error (User Exists)
+						Profile Update Error (User Not Exist)
 					</div>
 					<div class="content">
-						The specified User already exists in the Forum System.
+						The specified User does not exist in the Forum System.
 					</div>
 				</div>
 <?php
-						break;
-					case -11:
+					break;
+				case -11:
 ?>
 				<div class="container">
 					<div class="title">
@@ -286,8 +252,8 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 					</div>
 				</div>
 <?php
-						break;
-					case -12:
+					break;
+				case -12:
 ?>
 				<div class="container">
 					<div class="title">
@@ -298,20 +264,20 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 					</div>
 				</div>
 <?php
-						break;
-					case -13:
+					break;
+				case -13:
 ?>
 				<div class="container">
 					<div class="title">
 						Profile Update Error (DB ResultSet)
 					</div>
 					<div class="content">
-						The ResultSet was not returned from the Duplicate-User-Check!
+						The ResultSet was not returned from the User-Exists-Check!
 					</div>
 				</div>
 <?php
-						break;
-					default:
+					break;
+				default:
 ?>
 				<div class="container">
 					<div class="title">
@@ -322,10 +288,9 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 					</div>
 				</div>
 <?php
-						break;
-				}// end switch
+					break;
+			}// end switch
 
-			}// end if
 		}// end if
 	}// end if
 } else {
@@ -339,22 +304,22 @@ if( isset($_POST['updateprofile-is-updating']) && $_POST['updateprofile-is-updat
 							<fieldset>
 								<legend>Account Details</legend>
 								<label for="updateprofile-username">Username</label>
-								<input type="text" name="updateprofile-username" value="<?=$object_user->getUsername();?>" required>
+								<input type="text" name="updateprofile-username" value="<?=$object_user->getUsername();?>" required><br>
 								<label for="updateprofile-email">eMail Address</label>
-								<input type="email" name="updateprofile-email" value="<?=$object_user->getEmail();?>" required>
+								<input type="email" name="updateprofile-email" size="20" value="<?=$object_user->getEmail();?>" required><br>
 							</fieldset>
 							<fieldset>
 								<legend>User Profile</legend>
 								<label for="updateprofile-fname">First Name</label>
-								<input type="text" name="updateprofile-fname" value="<?=$object_user->getFirstName();?>" required>
+								<input type="text" name="updateprofile-fname" value="<?=$object_user->getFirstName();?>" required><br>
 								<label for="updateprofile-lname">Last Name</label>
-								<input type="text" name="updateprofile-lname" value="<?=$object_user->getLastName();?>" required>
+								<input type="text" name="updateprofile-lname" value="<?=$object_user->getLastName();?>" required><br>
 								<label for="updateprofile-sex">Sex</label>
-								<input type="text" name="updateprofile-sex" value="<?=$object_user->getSex();?>" required>
+								<input type="text" name="updateprofile-sex" value="<?=$object_user->getSex();?>" size="1" required><br>
 								<label for="updateprofile-bdate">Birth Date (YYYY-MM-DD)</label>
-								<input type="text" name="updateprofile-bdate" value="<?=$object_user->getBirthDateString();?>" required>
+								<input type="text" name="updateprofile-bdate" size="6" value="<?=$object_user->getBirthDateString();?>" required><br>
 								<label for="updateprofile-pcode">Postal Code (A1B-2C3)</label>
-								<input type="text" name="updateprofile-pcode" value="<?=$object_user->getPostalCode();?>" required>
+								<input type="text" name="updateprofile-pcode" size="4" value="<?=$object_user->getPostalCode();?>" required><br>
 							</fieldset>
 							<input type="hidden" name="updateprofile-is-updating" value="true">
 							<input type="hidden" name="updateprofile-uid" value="<?=$object_user->getUID();?>">

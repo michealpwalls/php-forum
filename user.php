@@ -639,16 +639,16 @@ class User extends Validator {
 	 * @return Integer Errorcode -1 on invalid user ID
 	 * @return Integer Errorcode -2 on invalid username
 	 * @return Integer Errorcode -3 on invalid Group ID
-	 * @return Integer Errorcode -5 on invalid eMail
-	 * @return Integer Errorcode -6 on invalid sex
-	 * @return Integer Errorcode -7 on invalid BirthDate
-	 * @return Integer Errorcode -8 on invalid firstName
-	 * @return Integer Errorcode -9 on invalid lastName
-	 * @return Integer Errorcode -10 on invalid postalCode
-	 * @return Integer Errorcode -11 when User does not exist
-	 * @return Integer Errorcode -12 on Database exceptions
-	 * @return Integer Errorcode -13 on Database Connection issues.
-	 * @return Integer Errorcode -14 no ResultSet from duplicate check.
+	 * @return Integer Errorcode -4 on invalid eMail
+	 * @return Integer Errorcode -5 on invalid sex
+	 * @return Integer Errorcode -6 on invalid BirthDate
+	 * @return Integer Errorcode -7 on invalid firstName
+	 * @return Integer Errorcode -8 on invalid lastName
+	 * @return Integer Errorcode -9 on invalid postalCode
+	 * @return Integer Errorcode -10 when User does not exist
+	 * @return Integer Errorcode -11 on Database exceptions
+	 * @return Integer Errorcode -12 on Database Connection issues.
+	 * @return Integer Errorcode -13 no ResultSet from duplicate check.
 	 */
 	public function UpdateProfile( $mixed_userIDIn, $mixed_usernameIn, $mixed_groupIDIn, $mixed_emailIn, $mixed_sexIn, $mixed_birthDateIn, $mixed_firstNameIn, $mixed_lastNameIn, $mixed_postalCodeIn ) {
 		// Validate the User ID
@@ -672,37 +672,37 @@ class User extends Validator {
 		// Validate the Email Address
 		$this->setUserInput( $mixed_emailIn );
 		if( $this->isEmail() === false ) {
-			return (int)-5;
+			return (int)-4;
 		}// end if
 		
 		// Validate the Sex
 		$this->setUserInput( $mixed_sexIn );
 		if( $this->isChar() === false ) {
-			return (int)-6;
+			return (int)-5;
 		}// end if
 		
 		// Validate the Birth Date
 		$this->setUserInput( $mixed_birthDateIn );
 		if( $this->isDateString() === false ) {
-			return (int)-7;
+			return (int)-6;
 		}// end if
 		
 		// Validate the First Name
 		$this->setUserInput( $mixed_firstNameIn );
 		if( $this->isName() === false ) {
-			return (int)-8;
+			return (int)-7;
 		}// end if
 		
 		// Validate the Last Name
 		$this->setUserInput( $mixed_lastNameIn );
 		if( $this->isName() === false ) {
-			return (int)-9;
+			return (int)-8;
 		}// end if
 		
 		// Validate the Postal Code
 		$this->setUserInput( $mixed_postalCodeIn );
 		if( $this->isPostalCode() === false ) {
-			return (int)-10;
+			return (int)-9;
 		}// end if
 		
 		// Connect to the Database
@@ -710,7 +710,7 @@ class User extends Validator {
 		
 		// Make sure we actually connected
 		if( !isset($object_dbConnection) || is_null($object_dbConnection) ) {
-			return (int)-13;
+			return (int)-12;
 		}// end if
 		
 	// I first have to make sure the user exists in the Database
@@ -726,19 +726,19 @@ class User extends Validator {
 		
 		// Make sure we got a ResultSet
 		if( is_bool($object_dbPreparedStatement) ) {
-			return (int)-14;
+			return (int)-13;
 		}// end if
 		
 		// Copy ResultSet into an Array
 		$array_dbResultSet = $object_dbPreparedStatement->fetch();
 		
 		// Unset the ResultSet for use later on
-		$object_dbPreparedStatement = null;
-		unset( $object_dbPreparedStatement );
+		//$object_dbPreparedStatement = null;
+		//unset( $object_dbPreparedStatement );
 		
 		// Make sure it is an empty resultSet
 		if( empty($array_dbResultSet[0]) ) {
-			return (int)-11;
+			return (int)-10;
 		}// end if
 		
 		unset( $array_dbResultSet );
@@ -748,7 +748,7 @@ class User extends Validator {
 		$object_dbPreparedStatement = $object_dbConnection->prepare( "UPDATE mpw_forum_users SET UNAME=:uname,GID=:gid,FNAME=:fName,LNAME=:lName,SEX=:sex,EMAIL=:eMail,PCODE=:pCode,BDATE=:bDate WHERE UID=:uid;" );
 
 		// Bind the parameters to the local variables
-		$object_dbPreparedStatement->bindParam( ":uid", $mixed_usernameIn );
+		$object_dbPreparedStatement->bindParam( ":uid", $mixed_userIDIn );
 		$object_dbPreparedStatement->bindParam( ":uname", $mixed_usernameIn );
 		$object_dbPreparedStatement->bindParam( ":gid", $mixed_groupIDIn );
 		$object_dbPreparedStatement->bindParam( ":fName", $mixed_firstNameIn );
@@ -769,8 +769,22 @@ class User extends Validator {
 		
 		// Make sure the user's Profile was properly updated
 		if( $integer_rowsAffected != 1 ) {
-			return (int)-12;
+			return (int)-11;
 		}// end if
+
+		// Update User Properties
+		$this->setUID( $mixed_userIDIn );
+		$this->setUsername( $mixed_usernameIn );
+		$this->setGID( $mixed_groupIDIn );
+		$this->setFirstName( $mixed_firstNameIn );
+		$this->setLastName( $mixed_lastNameIn );
+		$this->setSex( $mixed_sexIn );
+		$this->setEmail( $mixed_emailIn );
+		$this->setPostalCode( $mixed_postalCodeIn );
+		$this->setBirthDate( $mixed_birthDateIn );
+		
+		// Save User Properties to the Session
+		$this->SaveSession();
 
 		// Return errorcode 0 to show successfull Profile Update.
 		return (int)0;

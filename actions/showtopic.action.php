@@ -41,10 +41,9 @@ if( !isset($_GET['topicID']) ) {
 	// Show the Topic
 	include_once( "forum.php" );
 	$object_forum = new Forum();
-	$int_showTopicResult = $object_forum->showTopic( $_GET['topicID'] );
+	$int_showTopicResult = $object_forum->showTopic( $_GET['topicID'], $object_user->getUsername() );
 	if( $int_showTopicResult === 0 ) {
-		// Display the Topic's Comments
-		$object_forum->showComments( $_GET['topicID'], $object_user->getUsername() );
+		
 	} else {
 		//
 		// TODO: Error handling

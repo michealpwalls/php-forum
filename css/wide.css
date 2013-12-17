@@ -1,0 +1,15 @@
+div.forum_showTopic_commentBody {
+	display: none;
+	margin-left: 25px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 25px;
+}
+
+div.forum_topic_addComment {
+	margin-top: 15px;
+}
+
+form input, form select, form textarea { display: inline; }
+
+form label { display: inline; }

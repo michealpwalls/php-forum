@@ -50,13 +50,16 @@ class Forum extends Validator {
 	 * @param $mixed_ownerNameIn String to define the Owner of the new Topic
 	 * @param $mixed_titleIn String to set to the new Topic's Title
 	 * @param $mixed_bodyIn String to set the new Topic's Body (Content)
+	 * @param $mixed_lockState Integer 1 to lock Topic of Comments, 0 to keep it unlocked
 	 * @return Integer Errorcode 0 if successfully added Topic
 	 * @return Integer Errorcode -1 if ownerID is invalid
 	 * @return Integer Errorcode -2 if title is invalid
 	 * @return Integer Errorcode -3 if body invalid
-	 * @return Integer Errorcode -4 on DB insertion failures
+	 * @return Integer Errorcode -4 if lockState invalid
+	 * @return Integer Errorcode -5 on DB Connect failure
+	 * @return Integer Errorcode -6 on DB Insertion failure
 	 */
-	public function addTopic( $mixed_ownerNameIn, $mixed_titleIn, $mixed_bodyIn ) {
+	public function addTopic( $mixed_ownerNameIn, $mixed_titleIn, $mixed_bodyIn, $mixed_lockStateIn ) {
 		// Validate the OwnerID
 		$this->setUserInput( $mixed_ownerNameIn );
 		if( $this->isUsername() === false ) {
@@ -75,12 +78,18 @@ class Forum extends Validator {
 			return (int)-3;
 		}// end if
 		
+		// Validate the Lock State
+		$this->setUserInput( $mixed_lockStateIn );
+		if( $this->isSingleDigit() === false ) {
+			return (int)-4;
+		}// end if
+		
 		// Connect to the Database
 		include( "lib/dbconnect.php" );
 		
 		// Make sure we actually connected
 		if( !isset($object_dbConnection) || is_null($object_dbConnection) ) {
-			return (int)-4;
+			return (int)-5;
 		}// end if
 		
 		// Get the current date and time
@@ -88,16 +97,20 @@ class Forum extends Validator {
 		$string_currentDateTime = $array_dateTime["year"] . "-" . $array_dateTime["mon"] . "-" . $array_dateTime["mday"] . " " . $array_dateTime["hours"] . ":" . $array_dateTime["minutes"] . ":" . $array_dateTime["seconds"];
 		
 		// Prepare the SQL statement using Named params
-		$object_dbPreparedStatement = $object_dbConnection->prepare( "INSERT INTO mpw_forum_topics(ONAME,TITLE,BODY,CDATE) VALUES(:oname,:title,:body,:cdate);" );
+		$object_dbPreparedStatement = $object_dbConnection->prepare( "INSERT INTO mpw_forum_topics(LOCKSTATE,ONAME,TITLE,BODY,CDATE) VALUES(:lockState,:oname,:title,:body,:cdate);" );
 
 		// Bind the parameters to the local variables
+		$object_dbPreparedStatement->bindParam( ":lockState", $mixed_lockStateIn );
 		$object_dbPreparedStatement->bindParam( ":oname", $mixed_ownerNameIn );
 		$object_dbPreparedStatement->bindParam( ":title", $mixed_titleIn );
 		$object_dbPreparedStatement->bindParam( ":body", $mixed_bodyIn );
 		$object_dbPreparedStatement->bindParam( ":cdate", $string_currentDateTime );
 
 		// Query the db
-		$integer_rowsAffected = $object_dbPreparedStatement->execute();
+		$object_dbPreparedStatement->execute();
+		
+		// Get number of affected Rows
+		$integer_rowsAffected = $object_dbPreparedStatement->rowCount();
 
 		// Disconnect from the Database
 		$object_dbConnection = null;
@@ -105,7 +118,12 @@ class Forum extends Validator {
 		
 		// Make sure the new topic was properly inserted in the Database
 		if( $integer_rowsAffected != 1 ) {
-			return (int)-4;
+			echo( "\n\n<br><br>Rows Affected: " . $integer_rowsAffected . "<br><br>\n" );
+			echo( "SQL Command and Params: " . $object_dbPreparedStatement->DebugDumpParams() . "<br><br>\n" );
+			echo( "SQL Error: " );
+			print_r( $object_dbPreparedStatement->errorInfo() );
+			echo( "<br><br>\n\n" );
+			return (int)-6;
 		}// end if
 
 		// Return errorcode 0 to show successfull Registration.
@@ -160,16 +178,25 @@ class Forum extends Validator {
 	/**
 	 * This method will display a Forum Topic.
 	 * 
+	 * @param $mixed_topicIDIn Integer The Topic ID
+	 * @param $mixed_usernameIn String The current User's name
 	 * @return Integer Errorcode 0 on successfull display
 	 * @return Integer Errorcode -1 when Input is not valid Topic ID
-	 * @return Integer Errorcode -2 when Database Connection fails
-	 * @return Integer Errorcode -3 when Topic not found
+	 * @return Integer Errorcode -2 when Input is not valid User ID
+	 * @return Integer Errorcode -3 when Database Connection fails
+	 * @return Integer Errorcode -4 when Topic not found
 	 */
-	public function showTopic( $mixed_topicIDIn ) {
-		// Validate the input
+	public function showTopic( $mixed_topicIDIn, $mixed_usernameIn ) {
+		// Validate the Topic ID
 		$this->setUserInput( $mixed_topicIDIn );
 		if( $this->isWholeNumber() === false ) {
 			return (int)-1;
+		}// end if
+		
+		// Validate the User ID
+		$this->setUserInput( $mixed_usernameIn );
+		if( $this->isUsername() === false ) {
+			return (int)-2;
 		}// end if
 
 		// Connect to the Database
@@ -177,7 +204,7 @@ class Forum extends Validator {
 		
 		// Make sure DB is actually connected
 		if( !isset($object_dbConnection) || is_null($object_dbConnection) ) {
-			return (int)-2;
+			return (int)-3;
 		}// end if
 		
 		// Create a Prepared Statement for the Query
@@ -199,13 +226,101 @@ class Forum extends Validator {
 		} else {
 			$array_dbRow = $object_dbPreparedStatement->fetch();
 
-			// Display the requested Forum Topic
-			include( "views/forum_showTopic.txt" );
+			// Display the Topic Header controls
+			if( $array_dbRow[2] == $mixed_usernameIn ) {
+				include( "views/forum_showTopic_ownerHeader.txt" );
+			} else {
+				include( "views/forum_showTopic_guestHeader.txt" );
+			}// end if
+
+			// Display the Topic Body
+			include( "views/forum_showTopic_body.txt" );
+		}// end if
+
+		$this->showComments( $mixed_topicIDIn, $mixed_usernameIn );
+		
+		if( $array_dbRow[1] == 0 ) {
+			$this->showCommentForm( $mixed_usernameIn, $mixed_topicIDIn );
+		} else {
+			include_once( "views/forum_showTopic_comments_footerTopicLocked.txt" );
 		}// end if
 
 		// Return with Errorcode 0 to show no errors were thrown.
 		return (int)0;
 	}// end showTopic() method
+	
+	/**
+	 * This method will show the Form used to post new Comments
+	 * 
+	 * @param $mixed_usernameIn String Username to pass along
+	 * @param $mixed_topicIDIn Integer Topic ID to pass along
+	 */
+	public function showCommentForm( $mixed_usernameIn, $mixed_topicIDIn ) {
+		if( $mixed_usernameIn === "Guest" ) {
+			include_once( "views/forum_showTopic_comments_footerNotLoggedIn.txt" );
+		} else {
+			include_once( "views/forum_showTopic_comments_footer.txt" );
+		}// end if
+	}// end showCommentForm
+	
+	/**
+	 * This method will Lock a Topic.
+	 * Locked Topics cannot have new Comments posted to them.
+	 * 
+	 * @param $mixed_topicIDIn Integer TopicID of the Topic to Lock
+	 * @param $mixed_usernameIn String Username of currently logged in user
+	 * @return Integer Errorcode 0 on Successfull Lock
+	 * @return Integer Errorcode -1 on invalid  Topic ID
+	 * @return Integer Errorcode -2 on invalid  Username
+	 * @return Integer Errorcode -3 on DB Connect failures
+	 * @return Integer Errorcode -4 on DB Query failures
+	 */
+	 public function LockTopic( $mixed_topicIDIn, $mixed_usernameIn ) {
+		// Validate the Topic ID
+		$this->setUserInput( $mixed_topicIDIn );
+		if( $this->isWholeNumber() === false ) {
+			return (int)-1;
+		}// end if
+		
+		// Validate the User Name
+		$this->setUserInput( $mixed_usernameIn );
+		if( $this->isUsername() === false ) {
+			return (int)-2;
+		}// end if
+
+		// Connect to the Database
+		include( "lib/dbconnect.php" );
+		
+		// Make sure DB is actually connected
+		if( !isset($object_dbConnection) || is_null($object_dbConnection) ) {
+			return (int)-3;
+		}// end if
+		
+		// Create a Prepared Statement for the Query
+		$object_dbPreparedStatement = $object_dbConnection->prepare( "UPDATE mpw_forum_topics SET LOCKSTATE=1 WHERE TID=:tid AND ONAME=:uname;" );
+
+		// Bind the parameters
+		$object_dbPreparedStatement->bindParam( ":tid", $mixed_topicIDIn );
+		$object_dbPreparedStatement->bindParam( ":uname", $mixed_usernameIn );
+		
+		// Execute the Query
+		$object_dbPreparedStatement->execute();
+		
+		// Get affected rows
+		$int_affectedRows = $object_dbPreparedStatement->rowCount();
+		
+		// Disconnect from the Database
+		$object_dbConnection = null;
+		unset( $object_dbConnection );
+		
+		// Make sure we actually inserted the Comment
+		if( $int_affectedRows < 1 ) {
+			return (int)-4;
+		}// end if
+		
+		// Return with Errorcode 0 to show a successful comment
+		return (int)0;
+	 }// end method LockTopic
 	
 	/**
 	 * This method will iterate through the any Comments associated with a Topic.
@@ -264,13 +379,6 @@ class Forum extends Validator {
 
 		}// end if
 		
-		// Comments' footer
-		if( $mixed_userNameIn === "Guest" ) {
-			include_once( "views/forum_showTopic_comments_footerNoPosting.txt" );
-		} else {
-			include_once( "views/forum_showTopic_comments_footer.txt" );
-		}// end if
-
 		// Return with Errorcode 0 to show no errors were thrown.
 		return (int)0;
 	}// end showComments() method

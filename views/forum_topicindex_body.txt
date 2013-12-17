@@ -1,4 +1,4 @@
 							<div class="forumTopic" id="topic-<?=$array_dbRow[0];?>">
-								<span class="forumTopicCell"><a href="index.php?doAction=showtopic&topicID=<?=$array_dbRow[0];?>"><?=htmlspecialchars( $array_dbRow[2], ENT_QUOTES | ENT_HTML5, 'UTF-8' );?></a></span>
-								<span class="forumTopicCell">(<?=htmlspecialchars( $array_dbRow[4], ENT_QUOTES | ENT_HTML5, 'UTF-8' );?>)</span>
+								<span class="forumTopicCell"><a href="index.php?doAction=showtopic&topicID=<?=$array_dbRow[0];?>"><?=htmlspecialchars( $array_dbRow[3], ENT_QUOTES | ENT_HTML5, 'UTF-8' );?></a></span>
+								<span class="forumTopicCell">(<?=htmlspecialchars( $array_dbRow[5], ENT_QUOTES | ENT_HTML5, 'UTF-8' );?>)</span>
 							</div>

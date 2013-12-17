@@ -26,14 +26,6 @@
  * 
  */
 
-	/*
-	 * @return Integer Errorcode 0 if successfully added Topic
-	 * @return Integer Errorcode -1 if Owner Username is invalid
-	 * @return Integer Errorcode -2 if title is invalid
-	 * @return Integer Errorcode -3 if body invalid
-	 * @return Integer Errorcode -4 on DB insertion failures
-	 */
-
 if( $object_user->isLoggedIn() === false ) {
 ?>
 				<div class="container">
@@ -81,12 +73,23 @@ if( $object_user->isLoggedIn() === false ) {
 					</div>
 				</div>
 <?php
+		} else if ( !isset($_POST['addtopic-lockstate']) ) {
+?>
+				<div class="container">
+					<div class="title">
+						Add Topic Error (4)
+					</div>
+					<div class="content">
+						The Lock State was missing
+					</div>
+				</div>
+<?php
 		} else { 	// All checks passed
 			// Instantiate the Forum object
 			include_once( "forum.php" );
 			$object_forum = new Forum();
 			
-			$int_addTopicResult = $object_forum->addTopic( $_POST['addtopic-username'], $_POST['addtopic-title'], $_POST['addtopic-body'] );
+			$int_addTopicResult = $object_forum->addTopic( $_POST['addtopic-username'], $_POST['addtopic-title'], $_POST['addtopic-body'], $_POST['addtopic-lockstate'] );
 			if( $int_addTopicResult === 0 ) {
 ?>
 				<div class="container">
@@ -142,10 +145,34 @@ if( $object_user->isLoggedIn() === false ) {
 ?>
 				<div class="container">
 					<div class="title">
+						Add Topic Error (Lock State)
+					</div>
+					<div class="content">
+						The entered Lock State was rejected.
+					</div>
+				</div>
+<?php
+						break;
+					case -5:
+?>
+				<div class="container">
+					<div class="title">
+						Add Topic Error (DB Connect)
+					</div>
+					<div class="content">
+						Failed to connect to the Database.
+					</div>
+				</div>
+<?php
+						break;
+					case -6:
+?>
+				<div class="container">
+					<div class="title">
 						Add Topic Error (DB Insert)
 					</div>
 					<div class="content">
-						The Database was connected but the Insert statement failed.
+						Connected to Database, but failed to execute Insert statement.
 					</div>
 				</div>
 <?php
@@ -176,9 +203,15 @@ if( $object_user->isLoggedIn() === false ) {
 						<form method="POST" action="index.php?doAction=addtopic">
 							<fieldset>
 								<legend>Topic Details</legend>
+								<label for="addtopic-lockstate">Lock State</label>
+								<select name="addtopic-lockstate" required>
+									<option value="default" selected> -- Select State -- </option>
+									<option value="0">Unlocked</option>
+									<option value="1">Locked</option>
+								</select><br>
 								<label for="addtopic-title">Title</label>
 								<input type="text" name="addtopic-title" required><br>
-								<label for="addtopic-body">Body</label><br>
+								<label for="addtopic-body">Body</label>
 								<textarea name="addtopic-body" rows="6" cols="35" required></textarea>
 							</fieldset>
 							<input type="hidden" name="addtopic-is-posting" value="true">

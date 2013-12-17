@@ -1,0 +1,13 @@
+					<h2><?=htmlspecialchars( $array_dbRow[3], ENT_QUOTES | ENT_HTML5, 'UTF-8' );?></h2>
+					<div class="container">
+						<div class="forum_showTopic" id="topic-<?=$array_dbRow[0];?>">
+							<div class="forum_showTopicHeader">
+								<span class="forum_showTopic_headerCell">
+									<?=htmlspecialchars( $array_dbRow[3], ENT_QUOTES | ENT_HTML5, 'UTF-8' );?>
+									- By <?=htmlspecialchars( $array_dbRow[2], ENT_QUOTES | ENT_HTML5, 'UTF-8' );?>
+									on <?=htmlspecialchars( $array_dbRow[5], ENT_QUOTES | ENT_HTML5, 'UTF-8' );?>
+								</span>
+								<span class="forum_showTopic_headerCell alightRight">
+									<a href="index.php?doAction=locktopic&topicID=<?=$array_dbRow[0];?>">Lock Topic</a>
+								</span>
+							</div>

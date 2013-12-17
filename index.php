@@ -35,6 +35,9 @@
 		<title>Micheal Walls' Forum</title>
 		<meta charset="UTF-8">
 		<meta name="generator" content="Geany 0.20">
+		<link rel="stylesheet" href="css/wide.css" media="all and (min-width: 674px)">
+		<link rel="stylesheet" href="css/narrow.css" media="all and (max-width: 673px)">
+		<script src="js/libmpw_showHide.js"></script>
 	</head>
 
 	<body>

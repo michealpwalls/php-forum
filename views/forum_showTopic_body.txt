@@ -1,0 +1,7 @@
+							<div class="forum_showTopicBody">
+								<span class="forum_showTopic_bodyCell">
+									<?=htmlspecialchars( $array_dbRow[4], ENT_QUOTES | ENT_HTML5, 'UTF-8' );?>
+								</span>
+							</div>
+						</div>
+					</div>

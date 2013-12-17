@@ -1,0 +1,13 @@
+div.forum_showTopic_commentBody {
+	display: none;
+	margin-left: 15px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 15px;
+}
+
+div.forum_topic_addComment {
+	margin-top: 10px;
+}
+
+form label { display: block; }
