@@ -31,7 +31,7 @@
 
 	try {
 		// Connect to the Database
-		$object_dbConnection = new PDO( "mysql:localhost;dbname=db200250645", "micheal", "MiKey2116" );
+		$object_dbConnection = new PDO( "mysql:localhost;dbname=db200250645", "db200250645", "24244" );
 
 		// Manually set the character encoding just in case.
 		$object_dbConnection->exec( "SET NAMES utf8" );
